@@ -1,0 +1,37 @@
+
+-----------------------------------------------------
+Task Title: Real-Time Chat Application with Firebase
+Typescript + NextJS
+-----------------------------------------------------
+
+Task Description:
+Build a real-time chat application using Next.js and React that integrates Firebase for authentication and Firestore for data storage and streaming. 
+Users should be able to sign up, log in, send messages, and see messages from other users in real-time.
+
+-TYPESCRIPT
+-React 
+-Next.js
+-Firebase authentication
+-Firestore data storage and streaming
+
+---Requirements:---
+------------------------------------------------------------------------
+Authentication:
+Implement Firebase Authentication for user registration and login.
+------------------------------------------------------------------------
+Data Storage:
+Set up Firestore for storing chat messages.
+Create a Firestore collection for chat messages.
+------------------------------------------------------------------------
+Real-Time Chat:
+Display chat messages in real-time using Firestore's real-time updates.
+------------------------------------------------------------------------
+User Interface:
+Create an attractive user interface for the chat application.
+------------------------------------------------------------------------
+Security:
+Implement Firestore security rules to protect data.
+Validate user input on the client side.
+------------------------------------------------------------------------
+
+
