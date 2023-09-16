@@ -3,12 +3,13 @@ import Image from 'next/image'
 // import styles from './page.module.css'
 
 import firebase from '../Firebase/firebase_config';
-import { getFirestore, collection, getDocs, onSnapshot, QuerySnapshot, DocumentData, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, onSnapshot, QuerySnapshot, DocumentData, addDoc, Timestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
 export default function ChatPage(){
   interface ChatMessage {
     id: string;
+    timestamp: Timestamp;
     text: string;
     // Add other message properties as needed
   }
@@ -65,20 +66,27 @@ export default function ChatPage(){
     }
   };
 
-  // {(() => {
-  //   console.log(messages);
-  //   return null; // This will not render anything to the UI
-  // })()}
+  {(() => {
+    console.log(messages);
+    return null; // This will not render anything to the UI
+  })()}
 
   return (
     <main>
       
       Chat messages:
       <div>
-        {messages.reverse().map((message) => (
+        {messages.map((message) => (
           
           <div key={message.id}>
+            {(Object(message).timestamp)}
             {(Object(message).message)}
+
+            {(() => {
+              console.log("Time" + Object(Object(message).timestamp));
+              // Point3d(Object(smartTableList[i][2])["X"],Object(smartTableList[i][2])["Y"],Object(smartTableList[i][2])["Z"])
+              return null; // This will not render anything to the UI
+            })()}
             
           </div>
         ))}
