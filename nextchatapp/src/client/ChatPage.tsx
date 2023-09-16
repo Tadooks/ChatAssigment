@@ -3,7 +3,7 @@ import Image from 'next/image'
 // import styles from './page.module.css'
 
 import firebase from '../Firebase/firebase_config';
-import { getFirestore, collection, getDocs, onSnapshot, QuerySnapshot, DocumentData } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, onSnapshot, QuerySnapshot, DocumentData, addDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
 export default function ChatPage(){
@@ -14,6 +14,7 @@ export default function ChatPage(){
   }
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
     const db = getFirestore(firebase);
@@ -37,9 +38,32 @@ export default function ChatPage(){
   }, []);
 
 
-  messages.map(message =>
-    console.log("Yipee" + (Object(message).message)
-  ));
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewMessage(e.target.value);
+  };
+
+  const sendMessage = async () => {
+    // Check if the newMessage is not empty
+    if (newMessage.trim() === '') {
+      return;
+    }
+  
+    const db = getFirestore(firebase);
+    const chatCollection = collection(db, 'messages');
+  
+    try {
+      // Add the new message to Firestore
+      await addDoc(chatCollection, {
+        message: newMessage,
+        // Add other message properties as needed
+      });
+  
+      // Clear the input field
+      setNewMessage('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
 
   // {(() => {
   //   console.log(messages);
@@ -51,7 +75,7 @@ export default function ChatPage(){
       
       Chat messages:
       <div>
-        {messages.map((message) => (
+        {messages.reverse().map((message) => (
           
           <div key={message.id}>
             {(Object(message).message)}
@@ -61,10 +85,17 @@ export default function ChatPage(){
 
         
       </div>
-      
+
       <br></br>
       <div>
         Type your message here:
+        <input
+          type="text"
+          placeholder="Type your message here"
+          value={newMessage}
+          onChange={handleMessageChange}
+        />
+        <button onClick={sendMessage}>Send</button>
       </div>
     </main>
   )
