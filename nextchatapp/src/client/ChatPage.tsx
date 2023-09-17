@@ -5,17 +5,24 @@ import Image from 'next/image'
 import firebase from '../Firebase/firebase_config';
 import { getFirestore, collection, getDocs, onSnapshot, QuerySnapshot, DocumentData, addDoc, Timestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
+import {useRouter} from 'next/navigation';
 
 export default function ChatPage(){
-  interface ChatMessage {
+  interface ChatMessageData {
     id: string;
-    timestamp: Timestamp;
-    text: string;
-    // Add other message properties as needed
+    date: Date;
+    message: string;
+    username: string;
   }
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [newMessage, setNewMessage] = useState('');
+
+  const [messages, setMessages] = useState<ChatMessageData[]>([]);
+  const [messageInput, setMessageInput] = useState('');
+
+  const router = useRouter();
+
+  //message length
+  const messageLengthLimit=30;
 
   useEffect(() => {
     const db = getFirestore(firebase);
@@ -23,10 +30,25 @@ export default function ChatPage(){
     // console.log("HUH" + JSON.stringify(chatCollection))
     // Set up a real-time listener for the chat collection
     const unsubscribe = onSnapshot(chatCollection, (querySnapshot: QuerySnapshot<DocumentData>) => {
-      const updatedMessages: ChatMessage[] = [];
+      const updatedMessages: ChatMessageData[] = [];
       querySnapshot.forEach((doc) => {
-        updatedMessages.push({ id: doc.id, ...doc.data() } as ChatMessage);
+        
+        const data = doc.data();
+        const date = data.timestamp.toDate();//converting timestamp to readable format date
+
+        const chatMessageData: ChatMessageData = {
+          id: doc.id,
+          date,
+          message: data.message,
+          username: data.username
+        }
+        
+        updatedMessages.push(chatMessageData);
       });
+
+      // Sort messages by date in ascending order
+      updatedMessages.sort((a, b) => a.date.getTime() - b.date.getTime());
+    
       setMessages(updatedMessages);
 
       console.log("HUH" + JSON.stringify(updatedMessages))
@@ -40,12 +62,22 @@ export default function ChatPage(){
 
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewMessage(e.target.value);
+    setMessageInput(e.target.value);
   };
 
+
+  
+
   const sendMessage = async () => {
-    // Check if the newMessage is not empty
-    if (newMessage.trim() === '') {
+    // Check if the newMessageData is not empty
+    if (messageInput.trim() === '') {
+      alert("Message is empty")
+      return;
+    }
+
+    // Check if the message length exceeds a certain limit (e.g., 200 characters)
+    if (messageInput.length > messageLengthLimit) {
+      alert("Message is too long. Please keep it under 200 characters.");
       return;
     }
   
@@ -55,17 +87,26 @@ export default function ChatPage(){
     try {
       // Add the new message to Firestore
       await addDoc(chatCollection, {
-        message: newMessage,
-        // Add other message properties as needed
+        timestamp: Timestamp.now(),
+        username: "testUser",
+        message: messageInput,
+        
+        
+        //sent message properties
       });
   
       // Clear the input field
-      setNewMessage('');
+      setMessageInput('');
     } catch (error) {
-      console.error('Error sending message:', error);
+      alert('Error sending message:' + error);
     }
   };
 
+
+
+
+
+  //debugging
   {(() => {
     console.log(messages);
     return null; // This will not render anything to the UI
@@ -73,19 +114,24 @@ export default function ChatPage(){
 
   return (
     <main>
-      
+      <button type="button" onClick={() => router.push('/login')}>
+        Woop
+      </button>
       Chat messages:
       <div>
-        {messages.map((message) => (
+        {messages.map((messageData) => (
           
-          <div key={message.id}>
-            {(Object(message).timestamp)}
-            {(Object(message).message)}
+          <div key={messageData.id}>
+            {(Object(Object(messageData).date.toLocaleString()))}
+            {" "+(Object(messageData).username)}
+            :
+            {" "+(Object(messageData).message)}
+            
 
             {(() => {
-              console.log("Time" + Object(Object(message).timestamp));
+              console.log("Time: " + Object(Object(messageData).date.toLocaleString()));
               // Point3d(Object(smartTableList[i][2])["X"],Object(smartTableList[i][2])["Y"],Object(smartTableList[i][2])["Z"])
-              return null; // This will not render anything to the UI
+              return null;
             })()}
             
           </div>
@@ -100,8 +146,9 @@ export default function ChatPage(){
         <input
           type="text"
           placeholder="Type your message here"
-          value={newMessage}
+          value={messageInput}
           onChange={handleMessageChange}
+          maxLength={messageLengthLimit}
         />
         <button onClick={sendMessage}>Send</button>
       </div>
