@@ -6,6 +6,7 @@ import firebase from '../Firebase/firebase_config';
 import { getFirestore, collection, getDocs, onSnapshot, QuerySnapshot, DocumentData, addDoc, Timestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import {useRouter} from 'next/navigation';
+import Login from './Login';
 
 export default function ChatPage(){
   interface ChatMessageData {
@@ -152,6 +153,12 @@ export default function ChatPage(){
         />
         <button onClick={sendMessage}>Send</button>
       </div>
+
+
+
+      <Login/>
+    
+    
     </main>
   )
 
