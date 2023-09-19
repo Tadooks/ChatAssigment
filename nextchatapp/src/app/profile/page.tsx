@@ -10,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   
+  //LOADING NEEDED SO THAT AFTER LOGIN DATA APPEARS  
 
   // Function to handle email/password login
   const handleEmailLogin = async () => {
@@ -57,11 +58,15 @@ const Login = () => {
     }
   };
 
-  {(() => {
-    console.log(auth);
-    console.log(auth.currentUser?.email);
-    return null;
-  })()}
+  // {(() => {
+  //   console.log(auth);
+  //   console.log(auth.currentUser?.email);
+  //   return null;
+  // })()}
+
+  //forgor password
+
+  //reset password
 
   return (
     <div>
@@ -85,6 +90,11 @@ const Login = () => {
         <Link href="/register">
             Register
         </Link>
+        <Link href="/forgotpassword">
+            Forgot password
+        </Link>
+
+        <br></br><br></br>
     </div>
   );
 };

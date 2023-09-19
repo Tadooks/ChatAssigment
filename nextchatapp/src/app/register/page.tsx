@@ -21,7 +21,7 @@ export default function Register() {
         .then(async () => {
           await signOut(auth)//sign out user, so he could only login when verified.
           signOut(auth)
-          // window.location.reload(true);
+          window.location.reload();
         }).catch((err) => alert(err.message))
       }
       // sendEmailVerification(auth.currentUser);
