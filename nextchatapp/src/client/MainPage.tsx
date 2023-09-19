@@ -6,7 +6,8 @@ import firebase from '../Firebase/firebase_config';
 import { getFirestore, collection, getDocs, onSnapshot, QuerySnapshot, DocumentData, addDoc, Timestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import {useRouter} from 'next/navigation';
-import Login from './Login';
+
+import { auth } from '@/Firebase/firebase_config';
 
 export default function ChatPage(){
   interface ChatMessageData {
@@ -115,9 +116,8 @@ export default function ChatPage(){
 
   return (
     <main>
-      <button type="button" onClick={() => router.push('/login')}>
-        Woop
-      </button>
+
+
       Chat messages:
       <div>
         {messages.map((messageData) => (
@@ -129,11 +129,11 @@ export default function ChatPage(){
             {" "+(Object(messageData).message)}
             
 
-            {(() => {
+            {/* {(() => {
               console.log("Time: " + Object(Object(messageData).date.toLocaleString()));
               // Point3d(Object(smartTableList[i][2])["X"],Object(smartTableList[i][2])["Y"],Object(smartTableList[i][2])["Z"])
               return null;
-            })()}
+            })()} */}
             
           </div>
         ))}
@@ -153,10 +153,8 @@ export default function ChatPage(){
         />
         <button onClick={sendMessage}>Send</button>
       </div>
+      Currently logged in: {auth.currentUser?.email}
 
-
-
-      <Login/>
     
     
     </main>

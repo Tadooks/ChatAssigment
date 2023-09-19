@@ -2,11 +2,10 @@
 import Image from 'next/image'
 // import styles from './page.module.css'
 
-import firebase from '../Firebase/firebase_config';
+import firebase from '@/Firebase/firebase_config';
 import { getFirestore, collection, getDocs, onSnapshot, QuerySnapshot, DocumentData, addDoc, Timestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import {useRouter} from 'next/navigation';
-import Login from './Login';
 
 export default function Chat(){
   interface ChatMessageData {
@@ -115,9 +114,6 @@ export default function Chat(){
 
   return (
     <main>
-      <button type="button" onClick={() => router.push('/login')}>
-        Woop
-      </button>
       Chat messages:
       <div>
         {messages.map((messageData) => (
@@ -154,9 +150,6 @@ export default function Chat(){
         <button onClick={sendMessage}>Send</button>
       </div>
 
-
-    
-    
     </main>
   )
 
