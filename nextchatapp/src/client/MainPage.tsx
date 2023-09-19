@@ -9,7 +9,7 @@ import {useRouter} from 'next/navigation';
 
 import { auth } from '@/Firebase/firebase_config';
 
-export default function ChatPage(){
+export default function Chat(){
   interface ChatMessageData {
     id: string;
     date: Date;
@@ -20,13 +20,19 @@ export default function ChatPage(){
 
   const [messages, setMessages] = useState<ChatMessageData[]>([]);
   const [messageInput, setMessageInput] = useState('');
+  const [currentUserName, setCurrentUserName] = useState('');
 
   const router = useRouter();
 
   //message length
   const messageLengthLimit=30;
 
+  if(!auth.currentUser?.emailVerified){
+    alert("User is not signed in!")
+    router.push('/profile');
+  }
   useEffect(() => {
+    
     const db = getFirestore(firebase);
     const chatCollection = collection(db, 'messages');
     // console.log("HUH" + JSON.stringify(chatCollection))
@@ -53,6 +59,11 @@ export default function ChatPage(){
     
       setMessages(updatedMessages);
 
+      if(auth.currentUser?.email){
+        setCurrentUserName(auth.currentUser?.email.split('@')[0])
+      }
+
+
       console.log("HUH" + JSON.stringify(updatedMessages))
     });
 
@@ -69,7 +80,7 @@ export default function ChatPage(){
 
 
   
-
+  
   const sendMessage = async () => {
     // Check if the newMessageData is not empty
     if (messageInput.trim() === '') {
@@ -85,12 +96,13 @@ export default function ChatPage(){
   
     const db = getFirestore(firebase);
     const chatCollection = collection(db, 'messages');
-  
+
+
     try {
       // Add the new message to Firestore
       await addDoc(chatCollection, {
         timestamp: Timestamp.now(),
-        username: "testUser",
+        username: currentUserName,
         message: messageInput,
         
         
@@ -105,6 +117,7 @@ export default function ChatPage(){
   };
 
 
+  //if not logged in, redirect to login
 
 
 
@@ -116,8 +129,6 @@ export default function ChatPage(){
 
   return (
     <main>
-
-
       Chat messages:
       <div>
         {messages.map((messageData) => (
@@ -129,11 +140,15 @@ export default function ChatPage(){
             {" "+(Object(messageData).message)}
             
 
-            {/* {(() => {
+            {(() => {
               console.log("Time: " + Object(Object(messageData).date.toLocaleString()));
               // Point3d(Object(smartTableList[i][2])["X"],Object(smartTableList[i][2])["Y"],Object(smartTableList[i][2])["Z"])
+              console.log("AAA" + auth.currentUser?.email)
+              // if(auth.currentUser?.email){
+              //   console.log("YEEEET" + auth.currentUser?.email.split('@')[0])
+              // }
               return null;
-            })()} */}
+            })()}
             
           </div>
         ))}
@@ -153,10 +168,7 @@ export default function ChatPage(){
         />
         <button onClick={sendMessage}>Send</button>
       </div>
-      Currently logged in: {auth.currentUser?.email}
 
-    
-    
     </main>
   )
 

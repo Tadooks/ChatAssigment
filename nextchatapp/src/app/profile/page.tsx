@@ -9,6 +9,8 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  
+
   // Function to handle email/password login
   const handleEmailLogin = async () => {
     try {
@@ -25,6 +27,7 @@ const Login = () => {
         alert("Invalid email or password!")
       }
       alert("Logged in successfully!")
+      window.location.reload();
 
       // User is logged in
     } catch (error) {
@@ -38,6 +41,7 @@ const Login = () => {
     try {
       await signInWithPopup(auth, provider);
       alert("Logged in successfully!")
+      window.location.reload();//gmail gets desynced and doesnt load fast enough. Need loading screen to wait until data loads?
       // User is logged in
     } catch (error) {
       console.error('Error signing in with Google:', error);
@@ -47,6 +51,7 @@ const Login = () => {
   const handleSignOut = async () => {
     try {
       await auth.signOut();
+      window.location.reload();
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -75,7 +80,7 @@ const Login = () => {
       <button onClick={handleSignOut}>Sign out</button>
 
       Currently logged in: {auth.currentUser?.email}
-      Verified: {auth.currentUser?.emailVerified}
+      Verified: {auth.currentUser?.emailVerified.toString()}
 
         <Link href="/register">
             Register
