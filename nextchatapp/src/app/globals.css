@@ -109,7 +109,7 @@ a {
 
 .center{
   margin: auto;
-  width: 50%;
+  width: 80%;
 }
 
 .center2{
@@ -120,12 +120,46 @@ a {
 
 .auth{
   margin: auto;
-  width: 50%;
-  max-width: 400px;
+  width: 100%;
+  max-width: 300px;
   padding: 20px;
   text-align: center;
 }
 
 .space{
   margin: 5%;
+}
+
+.spaceButton{
+  margin: 5%;
+}
+
+
+
+
+/* Navbar styles */
+.NavBar {
+  background-color: #333; /* Background color for the navbar */
+  color: #fff; /* Text color */
+  display: flex; /* Display children horizontally */
+  justify-content: space-between; /* Space out the children */
+  padding: 10px 20px; /* Padding around the navbar */
+}
+
+/* Navbar elements */
+.Element {
+  display: inline-block; /* Display elements horizontally */
+  margin-right: 20px; /* Spacing between elements */
+}
+
+/* Navbar links */
+.Element a {
+  text-decoration: none; /* Remove underline from links */
+  color: #fff; /* Text color for links */
+  font-weight: bold; /* Bold text for links */
+}
+
+/* Navbar links on hover */
+.Element a:hover {
+  text-decoration: underline; /* Underline links on hover */
 }

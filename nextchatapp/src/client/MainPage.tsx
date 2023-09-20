@@ -25,6 +25,9 @@ export default function Chat(){
   const [messageInput, setMessageInput] = useState('');
   const [currentUserName, setCurrentUserName] = useState('');
 
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false); // Track if user data is loaded
+
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
@@ -36,7 +39,6 @@ export default function Chat(){
   //message length
   const messageLengthLimit=30;
 
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FIX LOADING ISSUE
 
   useEffect(() => {
     const db = getFirestore(firebase);

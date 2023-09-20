@@ -227,3 +227,38 @@
     transform: rotate(0deg);
   }
 }
+
+
+
+/* Navbar styles */
+.NavBar {
+  background-color: #333; /* Background color for the navbar */
+  color: #fff; /* Text color */
+  padding: 10px 20px; /* Padding around the links */
+}
+
+/* Navbar links */
+.NavBar ul {
+  list-style-type: none; /* Remove bullet points from the list */
+  padding: 0;
+}
+
+/* Navbar links - list items */
+.NavBar ul li {
+  display: inline; /* Display the list items horizontally */
+  margin-right: 20px; /* Spacing between the list items */
+}
+
+/* Navbar links - anchor tags */
+.NavBar ul li a {
+  text-decoration: none; /* Remove underline from links */
+  color: #fff; /* Text color for links */
+  font-weight: bold; /* Bold text for links */
+}
+
+/* Navbar links - anchor tags on hover */
+.NavBar ul li a:hover {
+  text-decoration: underline; /* Underline links on hover */
+}
+
+

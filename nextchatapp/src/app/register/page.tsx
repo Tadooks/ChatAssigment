@@ -4,6 +4,8 @@ import { auth } from '@/Firebase/firebase_config';
 import {createUserWithEmailAndPassword, sendEmailVerification, signOut} from 'firebase/auth'
 import { Button, TextField  } from "@mui/material";
 import {useRouter} from 'next/navigation';
+import Link from 'next/link';
+
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -38,6 +40,11 @@ export default function Register() {
   return (
     <div className='center'>
       <div className='auth'>
+      <div className='space'>
+                <Link href="/profile">
+                    <Button variant="contained">Back</Button>
+                </Link>
+            </div>
       <h1>Register</h1>
       <div className='space'>
         <TextField

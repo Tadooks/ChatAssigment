@@ -107,6 +107,7 @@ const Login = () => {
         {!userIsLoggedIn ? (
         <>
           <div className='auth'>
+            
             <h2>Login</h2>
             <div className='space'>
               <label>
@@ -132,22 +133,25 @@ const Login = () => {
                 />
               </label>
             </div>
-            <div className='space'>
+
+            <div className='spaceButton'>
               <Button variant="contained" onClick={handleEmailLogin}>Login</Button>
             </div>
-            <div className='space'>
+            <div className='spaceButton'>
               <Button variant="contained" onClick={handleGoogleSignIn}>Login with Google</Button>
             </div>
 
-            <div className='space'>
+            <div>
+            <div className='spaceButton'>
               <Link href="/register">
                 <Button variant="contained">Register</Button>
               </Link>
             </div>
-            <div className='space'>
+            <div className='spaceButton'>
               <Link href="/forgotpassword">
                 <Button variant="contained">Forgot password</Button>
               </Link>
+            </div>
             </div>
             
           </div>

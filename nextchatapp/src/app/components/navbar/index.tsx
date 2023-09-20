@@ -5,14 +5,19 @@ const Navbar = () => {
   return (
     <>
       <div>
-        <ul >
+        <div className="NavBar">
+          <div className="Element">
             <Link href="/">
               Chat
             </Link>
+          </div>
+
+          <div className="Element">
             <Link href="/profile">
               Profile
             </Link>
-        </ul>
+          </div>
+        </div>
       </div>
     </>
   );
