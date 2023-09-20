@@ -25,17 +25,20 @@ export default function Chat(){
   const [messageInput, setMessageInput] = useState('');
   const [currentUserName, setCurrentUserName] = useState('');
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const [allowView, setAllowView] = useState(false);
+  
+
   const router = useRouter();
 
   //message length
   const messageLengthLimit=30;
 
-  
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FIX LOADING ISSUE
+
   useEffect(() => {
-    if(!auth.currentUser?.emailVerified){
-      alert("User is not signed in!")
-      router.push('/profile');
-    }
     const db = getFirestore(firebase);
     const chatCollection = collection(db, 'messages');
     // console.log("HUH" + JSON.stringify(chatCollection))
@@ -66,7 +69,12 @@ export default function Chat(){
         setCurrentUserName(auth.currentUser?.email.split('@')[0])
       }
 
+      if(!auth.currentUser?.emailVerified){
 
+        alert("User is not signed in!")
+        router.push('/profile');
+      }
+      setLoading(false);
       console.log("HUH" + JSON.stringify(updatedMessages))
     });
 
@@ -88,6 +96,10 @@ export default function Chat(){
     // Check if the newMessageData is not empty
     if (messageInput.trim() === '') {
       alert("Message is empty")
+      return;
+    }
+    if (!auth.currentUser?.emailVerified) {
+      alert("Please login first!")
       return;
     }
 
@@ -133,35 +145,50 @@ export default function Chat(){
   return (
     <main>
       <div className='center2'>
-      Chat messages:
-      <div>
-        {messages.map((messageData) => (
+      {loading ?(
+          <p>Loading...</p>
+      ) : error ? (
+          <p>An error occured</p>
+      ):(
+      <>
+
+      
+      {(() => {
+        if (auth.currentUser?.emailVerified) {
+          return(
+            <div>
+              {messages.map((messageData) => (
+                
+                <div key={messageData.id}>
+                  {(Object(Object(messageData).date.toLocaleString()))}
+                  {" "+(Object(messageData).username)}
+                  :
+                  {" "+(Object(messageData).message)}
+                  
+
+                  {(() => {
+                    console.log("Time: " + Object(Object(messageData).date.toLocaleString()));
+                    // Point3d(Object(smartTableList[i][2])["X"],Object(smartTableList[i][2])["Y"],Object(smartTableList[i][2])["Z"])
+                    console.log("AAA" + auth.currentUser?.email)
+                    // if(auth.currentUser?.email){
+                    //   console.log("YEEEET" + auth.currentUser?.email.split('@')[0])
+                    // }
+                    return null;
+                  })()}
+                  
+                </div>
+              ))}
+            </div>
+          );
           
-          <div key={messageData.id}>
-            {(Object(Object(messageData).date.toLocaleString()))}
-            {" "+(Object(messageData).username)}
-            :
-            {" "+(Object(messageData).message)}
-            
+        }
+        "Loading..."
+        return null;
+      })()}
 
-            {(() => {
-              console.log("Time: " + Object(Object(messageData).date.toLocaleString()));
-              // Point3d(Object(smartTableList[i][2])["X"],Object(smartTableList[i][2])["Y"],Object(smartTableList[i][2])["Z"])
-              console.log("AAA" + auth.currentUser?.email)
-              // if(auth.currentUser?.email){
-              //   console.log("YEEEET" + auth.currentUser?.email.split('@')[0])
-              // }
-              return null;
-            })()}
-            
-          </div>
-        ))}
-
-        
-      </div>
 
       <br></br>
-        {/* <div>
+        <div>
           <TextField
             type="text"
             placeholder="Type your message here"
@@ -170,7 +197,9 @@ export default function Chat(){
             inputProps={{maxLength: messageLengthLimit}}
           />
           <Button onClick={sendMessage}>Send</Button>
-        </div> */}
+        </div>
+        </>
+        )}
       </div>
     </main>
   )

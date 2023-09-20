@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendEmailVerification, signOut} from 'firebase/auth'
 import { auth } from '@/Firebase/firebase_config';
 import Link from 'next/link';
@@ -20,7 +20,28 @@ const Login = () => {
 
   const router = useRouter();
   
-  //LOADING NEEDED SO THAT AFTER LOGIN DATA APPEARS  
+  const [userDataLoaded, setUserDataLoaded] = useState(false); // Track if user data is loaded
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false); // Track if user data is loaded
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        if (!user.emailVerified) {
+          signOut(auth);
+          alert("Please verify your email!");
+        }
+      }
+      setUserDataLoaded(true); // Mark user data as loaded
+      
+      if(user && user.emailVerified){
+        setUserIsLoggedIn(true);
+      }
+    });
+
+    return () => {
+      unsubscribe(); // Cleanup the listener
+    }
+  }, [router]);
 
   // Function to handle email/password login
   const handleEmailLogin = async () => {
@@ -30,18 +51,15 @@ const Login = () => {
       if (auth.currentUser) {
         if (!auth.currentUser.emailVerified) {
           signOut(auth);
-          alert("Please verify your email!");
+          // alert("Please verify your email!");
         } 
         else {
-          // The user is logged in successfully, so display the message.
           alert("Logged in successfully!");
-          window.location.reload();
-          // router.push('/');
+          router.push('/');
         }
       } else {
         alert("Invalid email or password!");
       }
-      
 
       // User is logged in
     } catch (error) {
@@ -55,10 +73,10 @@ const Login = () => {
     try {
       await signInWithPopup(auth, provider);
       alert("Logged in successfully!")
-      window.location.reload();//gmail gets desynced and doesnt load fast enough. Need loading screen to wait until data loads?
+      router.push('/');
       // User is logged in
     } catch (error) {
-      console.error('Error signing in with Google:', error);
+      alert('Error signing in with Google: ' + error);
     }
   };
 
@@ -84,61 +102,72 @@ const Login = () => {
 
   return (
     <div className='center'>
-      {/* <ThemeProvider theme={theme}> */}
-      <div className='auth'>
-      <h2>Login</h2>
-      <div className='space'>
-        <label>
-          <TextField 
-            id="outlined-basic" 
-            label="Email" 
-            variant="outlined" 
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-          />
-        </label>
-      </div>
-      <div  className='space'>
-        <label>
-          <TextField 
-            id="outlined-basic" 
-            label="Password" 
-            variant="outlined" 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-          />
-        </label>
-      </div>
-      <div  className='space'>
-        <Button variant="contained" onClick={handleEmailLogin}>Login</Button>
-      </div>
-      <div  className='space'>
-        <Button variant="contained" onClick={handleGoogleSignIn}>Login with Google</Button>
-      </div>
+      {userDataLoaded ? ( // Display the login form only when user data is loaded
+      <>
+        {!userIsLoggedIn ? (
+        <>
+          <div className='auth'>
+            <h2>Login</h2>
+            <div className='space'>
+              <label>
+                <TextField
+                  id="outlined-basic"
+                  label="Email"
+                  variant="outlined"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className='space'>
+              <label>
+                <TextField
+                  id="outlined-basic"
+                  label="Password"
+                  variant="outlined"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className='space'>
+              <Button variant="contained" onClick={handleEmailLogin}>Login</Button>
+            </div>
+            <div className='space'>
+              <Button variant="contained" onClick={handleGoogleSignIn}>Login with Google</Button>
+            </div>
 
-      <div  className='space'>
-        <Link href="/register">
-        <Button variant="contained">Register</Button>
-        </Link>
-      </div>
-      <div  className='space'>
-        <Link href="/forgotpassword">
-        <Button variant="contained">Forgot password</Button>
-        </Link>
-      </div>
-
-      <div  className='space'>
-        Currently logged in: {auth.currentUser?.email}
-        Verified: {auth.currentUser?.emailVerified.toString()}
-      </div>
-      <div  className='space'>
-        <Button variant="contained" onClick={handleSignOut}>Sign out</Button>
-      </div>
-
-      </div>
-      {/* </ThemeProvider> */}
+            <div className='space'>
+              <Link href="/register">
+                <Button variant="contained">Register</Button>
+              </Link>
+            </div>
+            <div className='space'>
+              <Link href="/forgotpassword">
+                <Button variant="contained">Forgot password</Button>
+              </Link>
+            </div>
+            
+          </div>
+        </>
+        ):(
+          <>
+          <div className='auth'>
+            <div className='space'>
+              Currently logged in: {auth.currentUser?.email}
+            </div>
+            <div className='space'>
+              <Button variant="contained" onClick={handleSignOut}>Sign out</Button>
+            </div>
+          </div>
+          </>
+        )}
+      </>
+      ) : (
+        <div className='auth'>Loading...</div> // Display a loading message while user data is loading
+      )}
     </div>
   );
 };
