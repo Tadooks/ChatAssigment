@@ -2,12 +2,15 @@
 import { useState } from 'react';
 import { auth } from '@/Firebase/firebase_config';
 import {createUserWithEmailAndPassword, sendEmailVerification, signOut} from 'firebase/auth'
-
+import { Button, TextField  } from "@mui/material";
+import {useRouter} from 'next/navigation';
 
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  const router = useRouter();
 
   const handleRegister = async () => {
     try {
@@ -21,35 +24,45 @@ export default function Register() {
         .then(async () => {
           await signOut(auth)//sign out user, so he could only login when verified.
           signOut(auth)
+          router.push('/profile');
           window.location.reload();
         }).catch((err) => alert(err.message))
       }
       // sendEmailVerification(auth.currentUser);
     } catch (error) {
-      console.log(error)
+      alert(error)
     }
   };
   
 
   return (
-    <div>
+    <div className='center'>
+      <div className='auth'>
       <h1>Register</h1>
-      Email:
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      Password:
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleRegister}>Register</button>
+      <div className='space'>
+        <TextField
+          id="outlined-basic" 
+          label="Email" 
+          variant="outlined" 
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+      <div className='space'>
+        <TextField
+          id="outlined-basic" 
+          label="Password" 
+          variant="outlined" 
+          type="password" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      <Button variant="contained" onClick={handleRegister}>Register</Button>
       {error && <p>{error}</p>}
+      </div>
     </div>
   );
 }

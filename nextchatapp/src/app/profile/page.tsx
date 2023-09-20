@@ -4,11 +4,21 @@ import {signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendEma
 import { auth } from '@/Firebase/firebase_config';
 import Link from 'next/link';
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Button, TextField  } from "@mui/material";
+
+import {useRouter} from 'next/navigation';
+
+
+import {makeStyles} from "@mui/styles"
+
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const router = useRouter();
   
   //LOADING NEEDED SO THAT AFTER LOGIN DATA APPEARS  
 
@@ -17,18 +27,21 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     
-      if(auth.currentUser){
-        console.log(auth.currentUser)
-        if(!auth.currentUser.emailVerified){
-            signOut(auth);
-            alert("Please verify your email!");
+      if (auth.currentUser) {
+        if (!auth.currentUser.emailVerified) {
+          signOut(auth);
+          alert("Please verify your email!");
+        } 
+        else {
+          // The user is logged in successfully, so display the message.
+          alert("Logged in successfully!");
+          window.location.reload();
+          // router.push('/');
         }
+      } else {
+        alert("Invalid email or password!");
       }
-      else{
-        alert("Invalid email or password!")
-      }
-      alert("Logged in successfully!")
-      window.location.reload();
+      
 
       // User is logged in
     } catch (error) {
@@ -68,33 +81,63 @@ const Login = () => {
 
   //reset password
 
-  return (
-    <div>
-      <h2>Login</h2>
-      <label>
-        Email:
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        
-      </label>
-      <label>
-        Password:
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </label>
-      <button onClick={handleEmailLogin}>Login with Email/Password</button>
-      <button onClick={handleGoogleSignIn}>Login with Google</button>
-      <button onClick={handleSignOut}>Sign out</button>
 
+  return (
+    <div className='center'>
+      {/* <ThemeProvider theme={theme}> */}
+      <div className='auth'>
+      <h2>Login</h2>
+      <div className='space'>
+        <label>
+          <TextField 
+            id="outlined-basic" 
+            label="Email" 
+            variant="outlined" 
+            type="email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+          />
+        </label>
+      </div>
+      <div  className='space'>
+        <label>
+          <TextField 
+            id="outlined-basic" 
+            label="Password" 
+            variant="outlined" 
+            type="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+          />
+        </label>
+      </div>
+      <div  className='space'>
+        <Button variant="contained" onClick={handleEmailLogin}>Login</Button>
+      </div>
+      <div  className='space'>
+      <Button variant="contained" onClick={handleGoogleSignIn}>Login with Google</Button>
+      </div>
+      <div  className='space'>
+      <Button variant="contained" onClick={handleSignOut}>Sign out</Button>
+      </div>
+      <div  className='space'>
       Currently logged in: {auth.currentUser?.email}
       Verified: {auth.currentUser?.emailVerified.toString()}
+      </div>
 
+      <div  className='space'>
         <Link href="/register">
             Register
         </Link>
+      </div>
+      <div  className='space'>
         <Link href="/forgotpassword">
             Forgot password
         </Link>
+      </div>
 
-        <br></br><br></br>
+      </div>
+      {/* </ThemeProvider> */}
     </div>
   );
 };
