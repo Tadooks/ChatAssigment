@@ -26,6 +26,7 @@ export default function Chat(){
   const [currentUserName, setCurrentUserName] = useState('');
 
   const [userIsLoggedIn, setUserIsLoggedIn] = useState(false); // Track if user data is loaded
+  const [isDataLoaded, setIsDataLoaded] = useState(false); // Track if user data is loaded
 
 
   const [loading, setLoading] = useState(true);
