@@ -6,6 +6,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Button, TextField  } from "@mui/material";
+
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
     const router = useRouter();
@@ -24,18 +27,27 @@ const ForgotPassword = () => {
   //reset password
 
   return (
-    <div>
-        <Link href="/profile">
-            Back
-        </Link>
-      <h1>Forgot Password</h1>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <button onClick={handleForgotPassword}>Reset Password</button>
+    <div className='center'>
+        <div className='auth'>
+            <div className='space'>
+                <Link href="/profile">
+                    <Button variant="contained">Back</Button>
+                </Link>
+            </div>
+            <h1>Forgot Password</h1>
+            <div className='space'>
+                <TextField 
+                    id="outlined-basic" 
+                    label="Email" 
+                    variant="outlined" 
+                    type="email" 
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+            </div>
+            <Button variant="contained" onClick={handleForgotPassword}>Reset Password</Button>
+        </div>
     </div>
   );
 };

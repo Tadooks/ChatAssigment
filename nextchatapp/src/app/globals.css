@@ -108,7 +108,12 @@ a {
 
 
 .center{
-  
+  margin: auto;
+  width: 50%;
+}
+
+.center2{
+  background-color: rgb(157, 235, 235);
   margin: auto;
   width: 50%;
 }

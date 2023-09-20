@@ -115,25 +115,26 @@ const Login = () => {
         <Button variant="contained" onClick={handleEmailLogin}>Login</Button>
       </div>
       <div  className='space'>
-      <Button variant="contained" onClick={handleGoogleSignIn}>Login with Google</Button>
-      </div>
-      <div  className='space'>
-      <Button variant="contained" onClick={handleSignOut}>Sign out</Button>
-      </div>
-      <div  className='space'>
-      Currently logged in: {auth.currentUser?.email}
-      Verified: {auth.currentUser?.emailVerified.toString()}
+        <Button variant="contained" onClick={handleGoogleSignIn}>Login with Google</Button>
       </div>
 
       <div  className='space'>
         <Link href="/register">
-            Register
+        <Button variant="contained">Register</Button>
         </Link>
       </div>
       <div  className='space'>
         <Link href="/forgotpassword">
-            Forgot password
+        <Button variant="contained">Forgot password</Button>
         </Link>
+      </div>
+
+      <div  className='space'>
+        Currently logged in: {auth.currentUser?.email}
+        Verified: {auth.currentUser?.emailVerified.toString()}
+      </div>
+      <div  className='space'>
+        <Button variant="contained" onClick={handleSignOut}>Sign out</Button>
       </div>
 
       </div>

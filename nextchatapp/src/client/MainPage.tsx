@@ -9,6 +9,9 @@ import {useRouter} from 'next/navigation';
 
 import { auth } from '@/Firebase/firebase_config';
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Button, TextField  } from "@mui/material";
+
 export default function Chat(){
   interface ChatMessageData {
     id: string;
@@ -27,12 +30,12 @@ export default function Chat(){
   //message length
   const messageLengthLimit=30;
 
-  if(!auth.currentUser?.emailVerified){
-    alert("User is not signed in!")
-    router.push('/profile');
-  }
+  
   useEffect(() => {
-    
+    if(!auth.currentUser?.emailVerified){
+      alert("User is not signed in!")
+      router.push('/profile');
+    }
     const db = getFirestore(firebase);
     const chatCollection = collection(db, 'messages');
     // console.log("HUH" + JSON.stringify(chatCollection))
@@ -129,6 +132,7 @@ export default function Chat(){
 
   return (
     <main>
+      <div className='center2'>
       Chat messages:
       <div>
         {messages.map((messageData) => (
@@ -157,18 +161,17 @@ export default function Chat(){
       </div>
 
       <br></br>
-      <div>
-        Type your message here:
-        <input
-          type="text"
-          placeholder="Type your message here"
-          value={messageInput}
-          onChange={handleMessageChange}
-          maxLength={messageLengthLimit}
-        />
-        <button onClick={sendMessage}>Send</button>
+        {/* <div>
+          <TextField
+            type="text"
+            placeholder="Type your message here"
+            value={messageInput}
+            onChange={handleMessageChange}
+            inputProps={{maxLength: messageLengthLimit}}
+          />
+          <Button onClick={sendMessage}>Send</Button>
+        </div> */}
       </div>
-
     </main>
   )
 
