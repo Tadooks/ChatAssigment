@@ -33,6 +33,3 @@ Security:
 Implement Firestore security rules to protect data.
 Validate user input on the client side.
 ------------------------------------------------------------------------
-
-
-Infinite scrolling, lazy loading.

@@ -39,7 +39,7 @@ export default function Chat(){
   const router = useRouter();
 
   //message length
-  const messageLengthLimit=30;
+  const messageLengthLimit=200;
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -48,7 +48,6 @@ export default function Chat(){
 
     
 
-    // console.log("HUH" + JSON.stringify(chatCollection))
     // Set up a real-time listener for the chat collection
     const unsubscribe = onSnapshot(chatCollection, (querySnapshot: QuerySnapshot<DocumentData>) => {
       const updatedMessages: ChatMessageData[] = [];
@@ -116,7 +115,7 @@ export default function Chat(){
       return;
     }
 
-    // Check if the message length exceeds a certain limit (e.g., 200 characters)
+    // Check if the message length exceeds a certain limit
     if (messageInput.length > messageLengthLimit) {
       alert("Message is too long. Please keep it under " +{messageLengthLimit} + " characters.");
       return;

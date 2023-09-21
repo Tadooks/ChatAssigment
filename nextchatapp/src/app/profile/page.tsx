@@ -159,6 +159,11 @@ const Login = () => {
         ):(
           <>
           <div className='auth'>
+          <div className='space'>
+                <Link href="/">
+                    <Button variant="contained">Back</Button>
+                </Link>
+            </div>
             <div className='space'>
               Currently logged in: {auth.currentUser?.email}
             </div>
