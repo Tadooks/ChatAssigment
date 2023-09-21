@@ -4,13 +4,14 @@ import Image from 'next/image'
 
 import firebase from '../Firebase/firebase_config';
 import { getFirestore, collection, getDocs, onSnapshot, QuerySnapshot, DocumentData, addDoc, Timestamp } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {useRouter} from 'next/navigation';
 
 import { auth } from '@/Firebase/firebase_config';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Button, TextField  } from "@mui/material";
+
 
 export default function Chat(){
   interface ChatMessageData {
@@ -25,8 +26,8 @@ export default function Chat(){
   const [messageInput, setMessageInput] = useState('');
   const [currentUserName, setCurrentUserName] = useState('');
 
-  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false); // Track if user data is loaded
-  const [isDataLoaded, setIsDataLoaded] = useState(false); // Track if user data is loaded
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false); // Track if user is logged in
+  const [isDataLoaded, setIsDataLoaded] = useState(false); // Track if chat data is loaded
 
 
   const [loading, setLoading] = useState(true);
@@ -39,11 +40,14 @@ export default function Chat(){
 
   //message length
   const messageLengthLimit=30;
-
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const db = getFirestore(firebase);
     const chatCollection = collection(db, 'messages');
+
+    
+
     // console.log("HUH" + JSON.stringify(chatCollection))
     // Set up a real-time listener for the chat collection
     const unsubscribe = onSnapshot(chatCollection, (querySnapshot: QuerySnapshot<DocumentData>) => {
@@ -88,6 +92,7 @@ export default function Chat(){
   }, []);
 
 
+
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessageInput(e.target.value);
   };
@@ -108,7 +113,7 @@ export default function Chat(){
 
     // Check if the message length exceeds a certain limit (e.g., 200 characters)
     if (messageInput.length > messageLengthLimit) {
-      alert("Message is too long. Please keep it under 200 characters.");
+      alert("Message is too long. Please keep it under " +{messageLengthLimit} + " characters.");
       return;
     }
   
@@ -135,8 +140,6 @@ export default function Chat(){
   };
 
 
-  //if not logged in, redirect to login
-
 
 
   //debugging
@@ -159,28 +162,25 @@ export default function Chat(){
       {(() => {
         if (auth.currentUser?.emailVerified) {
           return(
-            <div>
-              {messages.map((messageData) => (
-                
-                <div key={messageData.id}>
-                  {(Object(Object(messageData).date.toLocaleString()))}
-                  {" "+(Object(messageData).username)}
-                  :
-                  {" "+(Object(messageData).message)}
+            <div className='chat-container'>
+              <div className="chat-messages">
+                {messages.map((messageData) => (
                   
-
-                  {(() => {
-                    console.log("Time: " + Object(Object(messageData).date.toLocaleString()));
-                    // Point3d(Object(smartTableList[i][2])["X"],Object(smartTableList[i][2])["Y"],Object(smartTableList[i][2])["Z"])
-                    console.log("AAA" + auth.currentUser?.email)
-                    // if(auth.currentUser?.email){
-                    //   console.log("YEEEET" + auth.currentUser?.email.split('@')[0])
-                    // }
-                    return null;
-                  })()}
-                  
-                </div>
-              ))}
+                  <div key={messageData.id}>
+                    <div className='messageDate'>
+                      {(Object(Object(messageData).date.toLocaleString()))}
+                    </div>
+                    
+                    <div className='messageName'>
+                      {" "+(Object(messageData).username)}
+                    </div>
+                    <div className='messageMessage'>
+                      {" "+(Object(messageData).message)}
+                    </div>
+                    
+                  </div>
+                ))}
+              </div>
             </div>
           );
           
@@ -191,16 +191,29 @@ export default function Chat(){
 
 
       <br></br>
-        <div>
-          <TextField
-            type="text"
-            placeholder="Type your message here"
-            value={messageInput}
-            onChange={handleMessageChange}
-            inputProps={{maxLength: messageLengthLimit}}
-          />
-          <Button onClick={sendMessage}>Send</Button>
+
+        <div className='chat-input'>
+          <div className="message-field">
+            <TextField
+              type="text"
+              placeholder="Type your message here"
+              value={messageInput}
+              onChange={handleMessageChange}
+              inputProps={{maxLength: messageLengthLimit}}
+              fullWidth
+              size="small"
+            />
+          </div>
+
+          <div className='chat-send'>
+            <Button 
+              variant="outlined" 
+              onClick={sendMessage}>
+                Send
+            </Button>
+          </div>
         </div>
+
         </>
         )}
       </div>

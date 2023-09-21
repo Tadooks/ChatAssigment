@@ -4,6 +4,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.10",
     "@mui/styles": "^5.14.10",
+    "node-fetch": "^3.3.2",
     "react-router-dom": "^6.16.0"
   }
 }
