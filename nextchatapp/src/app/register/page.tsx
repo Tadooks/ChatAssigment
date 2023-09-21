@@ -28,9 +28,11 @@ export default function Register() {
           signOut(auth)
           router.push('/profile');
           window.location.reload();
+          router.push('/profile');
         }).catch((err) => alert(err.message))
       }
       // sendEmailVerification(auth.currentUser);
+      router.push('/profile');
     } catch (error) {
       alert(error)
     }

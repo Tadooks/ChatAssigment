@@ -65,6 +65,11 @@ export default function Chat(){
         }
         
         updatedMessages.push(chatMessageData);
+
+        var elem = document.getElementById('chat-messages'); // Use the ID you assigned
+        if(elem){
+          elem.scrollTop = elem.scrollHeight;
+        }
       });
 
       // Sort messages by date in ascending order
@@ -91,7 +96,7 @@ export default function Chat(){
     };
   }, []);
 
-
+  
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessageInput(e.target.value);
@@ -131,6 +136,11 @@ export default function Chat(){
         
         //sent message properties
       });
+
+      var elem = document.getElementById('chat-messages'); // Use the ID you assigned
+        if(elem){
+          elem.scrollTop = elem.scrollHeight;
+        }
   
       // Clear the input field
       setMessageInput('');
@@ -140,6 +150,16 @@ export default function Chat(){
   };
 
 
+  //SCROLL TO BOTTOM CHAT
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages]);
 
 
   //debugging
@@ -152,9 +172,9 @@ export default function Chat(){
     <main>
       <div className='center2'>
       {loading ?(
-          <p>Loading...</p>
+          <div>Loading...</div>
       ) : error ? (
-          <p>An error occured</p>
+          <div>An error occured</div>
       ):(
       <>
 
@@ -165,24 +185,37 @@ export default function Chat(){
             <div className='chat-container'>
               <div className="chat-messages">
                 {messages.map((messageData) => (
-                  
-                  <div key={messageData.id}>
-                    <div className='messageDate'>
-                      {(Object(Object(messageData).date.toLocaleString()))}
+                  <>
+                    <div
+                      className={`${ auth.currentUser?.email?.split('@')[0] === messageData.username ? 'highlighted-message' : 'other-message'}`}
+                      key={messageData.id}
+                    >
+
+                        <div className='messageDate'>
+                          {(Object(Object(messageData).date.toLocaleString()))}
+                        </div>
+                        
+                        <div className='messageName'>
+                          {" "+(Object(messageData).username)}
+                        </div>
+                        <div className='messageMessage'>
+                          {" "+(Object(messageData).message)}
+                        </div>
+
                     </div>
-                    
-                    <div className='messageName'>
-                      {" "+(Object(messageData).username)}
-                    </div>
-                    <div className='messageMessage'>
-                      {" "+(Object(messageData).message)}
-                    </div>
-                    
-                  </div>
+                    <span ref={messagesEndRef} />
+                  </>
                 ))}
               </div>
+
+              
             </div>
+            
+
           );
+
+          
+          
           
         }
         "Loading..."
