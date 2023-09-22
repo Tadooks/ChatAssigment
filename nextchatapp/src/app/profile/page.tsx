@@ -89,16 +89,6 @@ const Login = () => {
     }
   };
 
-  // {(() => {
-  //   console.log(auth);
-  //   console.log(auth.currentUser?.email);
-  //   return null;
-  // })()}
-
-  //forgor password
-
-  //reset password
-
 
   return (
     <div className='center'>
