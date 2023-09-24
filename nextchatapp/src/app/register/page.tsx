@@ -27,8 +27,7 @@ export default function Register() {
           await signOut(auth)//sign out user, so he could only login when verified.
           signOut(auth)
           router.push('/profile');
-          window.location.reload();
-          router.push('/profile');
+  
         }).catch((err) => alert(err.message))
       }
       // sendEmailVerification(auth.currentUser);
