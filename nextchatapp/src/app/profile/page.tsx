@@ -21,7 +21,7 @@ const Login = () => {
   const router = useRouter();
   
   const [userDataLoaded, setUserDataLoaded] = useState(false); // Track if user data is loaded
-  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false); // Track if user data is loaded
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false); // Track if user is logged
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -165,7 +165,7 @@ const Login = () => {
         )}
       </>
       ) : (
-        <div className='auth'>Loading...</div> // Display a loading message while user data is loading
+        <div className='auth'>Loading...</div>
       )}
     </div>
   );

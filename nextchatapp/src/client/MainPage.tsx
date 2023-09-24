@@ -128,7 +128,7 @@ export default function Chat(){
       return;
     }
 
-    // Check if the message length exceeds a certain limit
+    // Check if the message length exceeds limits
     if (messageInput.length > messageLengthLimit) {
       alert("Message is too long. Please keep it under " +{messageLengthLimit} + " characters.");
       return;
@@ -227,13 +227,13 @@ export default function Chat(){
 
 
 
-  
+
 
   //debugging
-  {(() => {
-    console.log(messages);
-    return null; // This will not render anything to the UI
-  })()}
+  // {(() => {
+  //   console.log(messages);
+  //   return null; // This will not render anything to the UI
+  // })()}
 
   return (
     <main>
